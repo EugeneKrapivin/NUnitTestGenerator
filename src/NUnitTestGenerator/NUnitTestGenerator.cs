@@ -5,14 +5,19 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
+using static NUnitTestGenerator.TestDescriptor;
+
 namespace NUnitTestGenerator
 {
     public class NUnitTestGenerator
     {
         public FixtureDescriptor Fixture { get; }
-        private List<TestDescriptor> _tests = new();
+        private readonly List<TestDescriptor> _tests = new();
 
         public IEnumerable<TestDescriptor> Tests => _tests;
+
+        public string Match { get; private set; }
+
         private readonly TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
 
         public NUnitTestGenerator(string fixture, IEnumerable<string> tests)
@@ -34,7 +39,7 @@ namespace NUnitTestGenerator
 
 namespace {Fixture.FixtureName}.Tests
 {{
-    [TestFixture(Description = ""{Fixture.FixtureName}"")]
+	[TestFixture(Description = ""{Fixture.FixtureName}"")]
 	public class {Fixture.FixtureName}Tests
 	{{
 ");
@@ -45,26 +50,39 @@ namespace {Fixture.FixtureName}.Tests
                 sb.AppendJoin("\r\n", GenerateTest(test).Select(x => $"\t\t{x}"));
                 sb.AppendLine();
             }
+            
             sb.Append(
 @$"	}}
 }}");
             return sb.ToString();
         }
 
-        private static readonly Regex ParametersRegex = new Regex(@"(?:(?:\w+)|{(?<param>\w+:\w+)})", RegexOptions.Compiled);
+        private static readonly Regex ParametersRegex = new Regex(@"{(?<full>\w+:\w+)}", RegexOptions.Compiled);
+        private static readonly Regex ParametersStructureRegex = new Regex(@"(?<param>\w+):(?<type>\w+(?:<\w+>)?)", RegexOptions.Compiled);
 
         private IEnumerable<string> GenerateTest(TestDescriptor test)
         {
-            var title = textInfo
-                .ToTitleCase(test.Title)
-                .Replace(' ', '_')
-                .Replace('-', '_');
+            var title = test.Title;
+            
+            var parsedParameters = ParseParameters(test);
+            
+            foreach(var p in parsedParameters)
+            {
+                title = title.Replace($"{{{p.Match}}}", p.Name);
+            }
+            
+            var cleanTitle = title;
 
-            var parameters = ParametersRegex.Matches(test.Title);
+            var parametersList = string.Join(", ", parsedParameters.Select(x => $"{x.Type} {x.Name}"));
+
+            title = textInfo
+               .ToTitleCase(title)
+               .Replace(' ', '_')
+               .Replace('-', '_');
 
             return
-$@"[Test(Description = ""{test.Title}"")]
-public void {title}()
+$@"[Test(Description = ""{test.Description ?? cleanTitle}"")]
+public void {title}({parametersList})
 {{
 	// Arrange
 	
@@ -73,6 +91,34 @@ public void {title}()
 	// Assert
 	Assert.Fail();
 }}".Split("\r\n");
+
+            static TestParameter ParseParameter(string parameterMatch)
+            {
+                var m = ParametersStructureRegex.Match(parameterMatch);
+
+                var name = m.Groups["param"].Value;
+                var type = m.Groups["type"].Value;
+
+                return new()
+                {
+                    Name = name,
+                    Type = type,
+                    Match = parameterMatch
+                };
+            }
+
+            static IEnumerable<TestParameter> ParseParameters(TestDescriptor d)
+            {
+                var parameterMatches = ParametersRegex.Matches(d.Title);
+
+                var groups = parameterMatches.SelectMany(x => x.Groups["full"].Captures)
+                    .ToArray();
+
+                return !groups.Any()
+                    ? Enumerable.Empty<TestParameter>()
+                    : groups
+                        .Select(capture => ParseParameter(capture.Value));
+            }
         }
     }
 }
