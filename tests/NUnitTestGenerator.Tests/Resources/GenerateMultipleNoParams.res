@@ -16,5 +16,16 @@ namespace TestFixture.Tests
 			// Assert
 			Assert.Fail();
 		}
+
+		[Test(Description = "generating multiple tests should create a valid result")]
+		public void Generating_Multiple_Tests_Should_Create_A_Valid_Result()
+		{
+			// Arrange
+			
+			// Act
+			
+			// Assert
+			Assert.Fail();
+		}
 	}
 }

@@ -35,7 +35,7 @@ namespace NUnitTestGenerator.Tests
 
         [Test]
         [TestCaseSource(nameof(TestCases))]
-        public void Generating_A_Single_Test_Should_Create_A_Valid_Result(IEnumerable<string> tests, string expected)
+        public void Generating_Tests_With_No_Params_Should_Return_Expected_Results(IEnumerable<string> tests, string expected)
         {
             var sut = new NUnitTestGenerator("TestFixture", tests);
 
