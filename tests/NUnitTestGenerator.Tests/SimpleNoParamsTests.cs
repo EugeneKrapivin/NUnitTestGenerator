@@ -9,7 +9,7 @@ namespace NUnitTestGenerator.Tests
     public static class TestHelpers
     {
         public static string GetExpected(string rel) =>
-            File.ReadAllText(Directory.GetCurrentDirectory() + $@"\Resources\{rel}.res");
+            File.ReadAllText(Directory.GetCurrentDirectory() + $@"/Resources/{rel}.res");
 
     }
 
