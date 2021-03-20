@@ -57,8 +57,8 @@ namespace {Fixture.FixtureName}.Tests
             return sb.ToString();
         }
 
-        private static readonly Regex ParametersRegex = new Regex(@"{(?<full>\w+:\w+)}", RegexOptions.Compiled);
         private static readonly Regex ParametersStructureRegex = new Regex(@"(?<param>\w+):(?<type>\w+(?:<\w+>)?)", RegexOptions.Compiled);
+        private static readonly Regex ParametersRegex = new Regex(@$"{{(?<full>{ParametersStructureRegex})}}", RegexOptions.Compiled);
 
         private IEnumerable<string> GenerateTest(TestDescriptor test)
         {

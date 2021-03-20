@@ -14,7 +14,7 @@ namespace NUnitTestGenerator.Tests
     }
 
     [TestFixture]
-    public class GenerationWithNoParameters
+    public class BasicTestGenerationTests
     {
         public static IEnumerable<TestCaseData> TestCasesNoParams => new []
         {
@@ -23,8 +23,10 @@ namespace NUnitTestGenerator.Tests
                  { 
                      "generating a single test should create a valid result" 
                  }, 
-                 TestHelpers.GetExpected("GenerateSingleNoParams")),
-            
+                 TestHelpers.GetExpected("GenerateSingleNoParams"))
+            .SetName("generating a single test with no parameters should create a valid result"),
+
+
             new TestCaseData(
                  new [] 
                  { 
@@ -32,26 +34,9 @@ namespace NUnitTestGenerator.Tests
                     "generating multiple tests should create a valid result" 
                  },
                  TestHelpers.GetExpected("GenerateMultipleNoParams"))
+            .SetName("generating a multiple tests with no parameters should create a valid results")
         };
-
-        [Test]
-        [TestCaseSource(nameof(TestCasesNoParams))]
-        public void Generating_Tests_With_No_Params_Should_Return_Expected_Results(IEnumerable<string> tests, string expected)
-        {
-            var sut = new NUnitTestGenerator("TestFixture", tests);
-
-            var r = sut.GenerateTests();
-
-            Assert.That(r, Is.Not.Null.And.Not.Empty);
-            Assert.That(r, Is.EqualTo(expected));
-        }
-
-    }
-
-    [TestFixture]
-    public class GenerationWithParametersTests
-    {
-
+      
         public static IEnumerable<TestCaseData> TestCasesWithParams => new[]
 {
             new TestCaseData(
@@ -60,7 +45,7 @@ namespace NUnitTestGenerator.Tests
                      "generating a {single:string} test should create a valid result"
                  },
                  TestHelpers.GetExpected("GenerateSingleWithSingleParam"))
-            .SetName("Generate single test with single parameter"),
+            .SetName("generate single test with single parameter"),
 
             new TestCaseData(
                  new []
@@ -68,7 +53,7 @@ namespace NUnitTestGenerator.Tests
                      "generating a {single:string} test should create a {valid:bool} result"
                  },
                  TestHelpers.GetExpected("GenerateSingleWithMultipleParams"))
-            .SetName("Generate single test with multiple parameters"),
+            .SetName("generate single test with multiple parameters"),
 
             new TestCaseData(
                  new []
@@ -77,7 +62,7 @@ namespace NUnitTestGenerator.Tests
                     "generating {multiple:IEnumerable<string>} tests should create a valid result"
                  },
                  TestHelpers.GetExpected("GenerateMultipleWithSingleParam"))
-            .SetName("Generate multiple tests with single parameter each"),
+            .SetName("generate multiple tests with single parameter each"),
 
             new TestCaseData(
                  new []
@@ -85,14 +70,13 @@ namespace NUnitTestGenerator.Tests
                     "generating a {single:string} test should create a {valid:bool} result",
                     "generating {multiple:IEnumerable<string>} tests should create a {valid:bool} result"
                  },
-                 TestHelpers.GetExpected("GenerateMultipleNoParams"))
-            .SetName("Generate multiple tests with multiple parameters each"),
+                 TestHelpers.GetExpected("GenerateMultipleWithMultipleParams"))
+            .SetName("generate multiple tests with multiple parameters each"),
         };
 
-
-        [Test]
+        [TestCaseSource(nameof(TestCasesNoParams))]
         [TestCaseSource(nameof(TestCasesWithParams))]
-        public void Generating_Tests_With_Parameters_Should_Create_Tests_With_Parameters(IEnumerable<string> tests, string expected)
+        public void Generating_Basic_Tests_Should_Return_Expected_Value(IEnumerable<string> tests, string expected)
         {
             var sut = new NUnitTestGenerator("TestFixture", tests);
 
