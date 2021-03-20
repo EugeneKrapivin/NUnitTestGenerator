@@ -11,6 +11,9 @@ namespace NUnitTestGenerator.Tests
         public static string GetExpected(string rel) =>
             File.ReadAllText(Directory.GetCurrentDirectory() + $@"/Resources/{rel}.res");
 
+        public static string ReplaceCRLF(this string s)
+            => s.Replace("\r\n", "\n");
+
     }
 
     [TestFixture]
@@ -83,7 +86,7 @@ namespace NUnitTestGenerator.Tests
             var r = sut.GenerateTests();
 
             Assert.That(r, Is.Not.Null.And.Not.Empty);
-            Assert.That(r, Is.EqualTo(expected));
+            Assert.That(r.ReplaceCRLF(), Is.EqualTo(expected.ReplaceCRLF()));
         }
 
     }
