@@ -35,24 +35,24 @@ namespace NUnitTestGenerator
         {
             var sb = new StringBuilder();
             sb.Append(
-@$"using NUnit.Framework;
+$@"using NUnit.Framework;
 
 namespace {Fixture.FixtureName}.Tests
 {{
-	[TestFixture(Description = ""{Fixture.FixtureName}"")]
-	public class {Fixture.FixtureName}Tests
-	{{
+  [TestFixture(Description = ""{Fixture.FixtureName}"")]
+  public class {Fixture.FixtureName}Tests
+  {{
 ");
 
             foreach (var test in _tests)
             {
                 sb.AppendLine();
-                sb.AppendJoin("\r\n", GenerateTest(test).Select(x => $"\t\t{x}"));
+                sb.AppendJoin("\r\n", GenerateTest(test).Select(x => $"    {x}"));
                 sb.AppendLine();
             }
             
             sb.Append(
-@$"	}}
+$@"  }}
 }}");
             return sb.ToString();
         }
@@ -84,12 +84,12 @@ namespace {Fixture.FixtureName}.Tests
 $@"[Test(Description = ""{test.Description ?? cleanTitle}"")]
 public void {title}({parametersList})
 {{
-	// Arrange
+  // Arrange
 	
-	// Act
+  // Act
 	
-	// Assert
-	Assert.Fail();
+  // Assert
+  Assert.Fail();
 }}".Split("\r\n");
 
             static TestParameter ParseParameter(string parameterMatch)
