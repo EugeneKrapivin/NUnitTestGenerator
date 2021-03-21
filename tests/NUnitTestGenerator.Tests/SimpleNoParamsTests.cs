@@ -81,7 +81,7 @@ namespace NUnitTestGenerator.Tests
         [TestCaseSource(nameof(TestCasesWithParams))]
         public void Generating_Basic_Tests_Should_Return_Expected_Value(IEnumerable<string> tests, string expected)
         {
-            var sut = new NUnitTestGenerator("TestFixture", tests);
+            var sut = new TestGenerator("TestFixture", tests);
 
             var r = sut.GenerateTests();
 

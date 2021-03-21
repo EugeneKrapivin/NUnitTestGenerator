@@ -10,9 +10,9 @@ namespace TestFixture.Tests
     public void Generating_A_Single_Test_Should_Create_A_Valid_Result()
     {
       // Arrange
-      
+
       // Act
-      
+
       // Assert
       Assert.Fail();
     }
@@ -21,9 +21,9 @@ namespace TestFixture.Tests
     public void Generating_Multiple_Tests_Should_Create_A_Valid_Result()
     {
       // Arrange
-      
+
       // Act
-      
+
       // Assert
       Assert.Fail();
     }

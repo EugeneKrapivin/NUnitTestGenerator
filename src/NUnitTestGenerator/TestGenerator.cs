@@ -9,7 +9,7 @@ using static NUnitTestGenerator.TestDescriptor;
 
 namespace NUnitTestGenerator
 {
-    public class NUnitTestGenerator
+    public class TestGenerator
     {
         public FixtureDescriptor Fixture { get; }
         private readonly List<TestDescriptor> _tests = new();
@@ -20,7 +20,7 @@ namespace NUnitTestGenerator
 
         private readonly TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
 
-        public NUnitTestGenerator(string fixture, IEnumerable<string> tests)
+        public TestGenerator(string fixture, IEnumerable<string> tests)
         {
             var testDescriptors = tests.Select(x => new TestDescriptor { Title = x }).ToList();
             _tests.AddRange(testDescriptors);
@@ -47,7 +47,8 @@ namespace {Fixture.FixtureName}.Tests
             foreach (var test in _tests)
             {
                 sb.AppendLine();
-                sb.AppendJoin("\r\n", GenerateTest(test).Select(x => $"    {x}"));
+                sb.AppendJoin("\r\n", GenerateTest(test)
+                    .Select(x => !string.IsNullOrWhiteSpace(x) ? $"    {x}" : x));
                 sb.AppendLine();
             }
             
@@ -85,9 +86,9 @@ $@"[Test(Description = ""{test.Description ?? cleanTitle}"")]
 public void {title}({parametersList})
 {{
   // Arrange
-	
+
   // Act
-	
+
   // Assert
   Assert.Fail();
 }}".Split("\r\n");

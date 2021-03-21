@@ -10,9 +10,9 @@ namespace TestFixture.Tests
     public void Generating_A_Single_Test_Should_Create_A_Valid_Result(string single, bool valid)
     {
       // Arrange
-      
+
       // Act
-      
+
       // Assert
       Assert.Fail();
     }
