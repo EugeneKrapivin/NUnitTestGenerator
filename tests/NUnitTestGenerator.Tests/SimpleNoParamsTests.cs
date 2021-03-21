@@ -12,7 +12,7 @@ namespace NUnitTestGenerator.Tests
             File.ReadAllText(Directory.GetCurrentDirectory() + $@"/Resources/{rel}.res");
 
         public static string ReplaceCRLF(this string s)
-            => s.Replace("\r\n", "\n");
+            => s.Replace("\r\n", "\n").Replace("\t", "  ");
 
     }
 
