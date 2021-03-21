@@ -47,7 +47,7 @@ namespace {Fixture.FixtureName}.Tests
             foreach (var test in _tests)
             {
                 sb.AppendLine();
-                sb.AppendJoin("\r\n", GenerateTest(test)
+                sb.AppendJoin(Environment.NewLine, GenerateTest(test)
                     .Select(x => !string.IsNullOrWhiteSpace(x) ? $"    {x}" : x));
                 sb.AppendLine();
             }
@@ -91,7 +91,7 @@ public void {title}({parametersList})
 
   // Assert
   Assert.Fail();
-}}".Split("\r\n");
+}}".Split(Environment.NewLine);
 
             static TestParameter ParseParameter(string parameterMatch)
             {
